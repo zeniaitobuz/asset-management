@@ -21,7 +21,7 @@ export const getAllUsers = async (
 };
 
 // Create a new user
-export const createEmployee = async (
+export const addEmployee = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -62,6 +62,7 @@ export const updateEmployee = async (
         employeeEmail: String(employeeEmail),
         employeePhone: String(employeePhone),
         employeeTeam: String(employeeTeam),
+        updatedAt: new Date(),
       },
       create: {
         employeeName: String(employeeName),
