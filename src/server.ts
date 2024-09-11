@@ -1,12 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
-import userRoute from "./routes/userRoutes";
+import employeeRoute from "./routes/employeeRoutes";
+import deviceRoutes from "./routes/deviceRoutes";
 const app = express();
 const prisma = new PrismaClient();
 import cors from "cors";
 
 app.use(express.json());
-app.use(userRoute);
+
+app.use(employeeRoute);
+app.use(deviceRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running!");

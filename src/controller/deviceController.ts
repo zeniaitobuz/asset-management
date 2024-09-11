@@ -20,79 +20,84 @@ export const getAllDevices = async (
   }
 };
 
-// // Create a new user
-// export const addDevice = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { employeeName, employeeEmail, employeePhone, employeeTeam } = req.body;
-//   try {
-//     const addedDevice: devices = await prisma.employees.create({
-//       data: {},
-//     });
-//     res.json({
-//       data: addedDevice,
-//       message: "Device added successfully",
-//       success: true,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+// Create a new device
+export const addDevice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  try {
+    const addedDevice: devices = await prisma.devices.create({
+      data: {
+        deviceType: deviceType,
+        deviceName: deviceName,
+        serialNo: serialNo,
+        assignee: assignee,
+      },
+    });
+    res.json({
+      data: addedDevice,
+      message: "Device added successfully",
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-// // Update a user
-// export const updateEmployee = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { id } = req.params;
-//   const { employeeName, employeeEmail, employeePhone, employeeTeam } = req.body;
-//   try {
-//     const updatedEmployee: employees = await prisma.employees.upsert({
-//       where: { id: id },
-//       update: {
-//         employeeName: String(employeeName),
-//         employeeEmail: String(employeeEmail),
-//         employeePhone: String(employeePhone),
-//         employeeTeam: String(employeeTeam),
-//         updatedAt: new Date(),
-//       },
-//       create: {
-//         employeeName: String(employeeName),
-//         employeeEmail: String(employeeEmail),
-//         employeePhone: String(employeePhone),
-//         employeeTeam: String(employeeTeam),
-//       },
-//     });
-//     res.json({
-//       data: updatedEmployee,
-//       message: "Employee updated successfully",
-//       success: true,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+// Update a device
+export const updateDevice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  try {
+    const updatedDevice: devices = await prisma.devices.upsert({
+      where: { id: id },
+      update: {
+        deviceType: deviceType,
+        deviceName: deviceName,
+        serialNo: serialNo,
+        assignee: assignee,
+        updatedAt: new Date(),
+      },
+      create: {
+        deviceType: deviceType,
+        deviceName: deviceName,
+        serialNo: serialNo,
+        assignee: assignee,
+      },
+    });
+    res.json({
+      data: updatedDevice,
+      message: "Device updated successfully",
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-// // Delete a user
-// export const deleteEmployee = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { id } = req.params;
-//   try {
-//     const deletedEmployee: employees = await prisma.employees.delete({
-//       where: { id: id },
-//     });
-//     res.json({
-//       data: deletedEmployee,
-//       message: "Employee deleted successfully",
-//       success: true,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+// Delete a device
+export const deleteDevice = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const deletedDevice: devices = await prisma.devices.delete({
+      where: { id: id },
+    });
+    res.json({
+      data: deletedDevice,
+      message: "Employee deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

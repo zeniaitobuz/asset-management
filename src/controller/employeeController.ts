@@ -30,10 +30,10 @@ export const addEmployee = async (
   try {
     const addedEmployee: employees = await prisma.employees.create({
       data: {
-        employeeName: String(employeeName),
-        employeeEmail: String(employeeEmail),
-        employeePhone: String(employeePhone),
-        employeeTeam: String(employeeTeam),
+        employeeName: employeeName,
+        employeeEmail: employeeEmail,
+        employeePhone: employeePhone,
+        employeeTeam: employeeTeam,
       },
     });
     res.json({
@@ -58,17 +58,17 @@ export const updateEmployee = async (
     const updatedEmployee: employees = await prisma.employees.upsert({
       where: { id: id },
       update: {
-        employeeName: String(employeeName),
-        employeeEmail: String(employeeEmail),
-        employeePhone: String(employeePhone),
-        employeeTeam: String(employeeTeam),
+        employeeName: employeeName,
+        employeeEmail: employeeEmail,
+        employeePhone: employeePhone,
+        employeeTeam: employeeTeam,
         updatedAt: new Date(),
       },
       create: {
-        employeeName: String(employeeName),
-        employeeEmail: String(employeeEmail),
-        employeePhone: String(employeePhone),
-        employeeTeam: String(employeeTeam),
+        employeeName: employeeName,
+        employeeEmail: employeeEmail,
+        employeePhone: employeePhone,
+        employeeTeam: employeeTeam,
       },
     });
     res.json({
