@@ -1,4 +1,4 @@
-import { devices, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -28,14 +28,26 @@ export const addDevice = async (
 ) => {
   const { deviceType, deviceName, serialNo, assignee } = req.body;
   try {
-    const addedDevice: devices = await prisma.devices.create({
+    let linkedEmployee;
+
+    if (assignee) {
+      linkedEmployee = await prisma.employees.findUnique({
+        where: {
+          employeeEmail: assignee,
+        },
+      });
+    }
+
+    const addedDevice = await prisma.devices.create({
       data: {
-        deviceType: deviceType,
-        deviceName: deviceName,
-        serialNo: serialNo,
-        assignee: assignee,
+        deviceType,
+        deviceName,
+        serialNo,
+        assignee,
+        employeeId: linkedEmployee?.id,
       },
     });
+
     res.json({
       data: addedDevice,
       message: "Device added successfully",
@@ -55,20 +67,32 @@ export const updateDevice = async (
   const { id } = req.params;
   const { deviceType, deviceName, serialNo, assignee } = req.body;
   try {
-    const updatedDevice: devices = await prisma.devices.upsert({
-      where: { id: id },
+    let linkedEmployee;
+
+    if (assignee) {
+      linkedEmployee = await prisma.employees.findUnique({
+        where: {
+          employeeEmail: assignee,
+        },
+      });
+    }
+
+    const updatedDevice = await prisma.devices.upsert({
+      where: { id },
       update: {
-        deviceType: deviceType,
-        deviceName: deviceName,
-        serialNo: serialNo,
-        assignee: assignee,
+        deviceType,
+        deviceName,
+        serialNo,
+        assignee,
+        employeeId: linkedEmployee?.id,
         updatedAt: new Date(),
       },
       create: {
-        deviceType: deviceType,
-        deviceName: deviceName,
-        serialNo: serialNo,
-        assignee: assignee,
+        deviceType,
+        deviceName,
+        serialNo,
+        assignee,
+        employeeId: linkedEmployee?.id,
       },
     });
     res.json({
@@ -89,8 +113,8 @@ export const deleteDevice = async (
 ) => {
   const { id } = req.params;
   try {
-    const deletedDevice: devices = await prisma.devices.delete({
-      where: { id: id },
+    const deletedDevice = await prisma.devices.delete({
+      where: { id },
     });
     res.json({
       data: deletedDevice,
