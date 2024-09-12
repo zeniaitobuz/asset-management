@@ -34,7 +34,7 @@ model employees {
   id               String    @id @default(uuid())
   employeeName     String    @map("employee_name")
   employeeEmail    String    @unique @map("employee_email")
-  employeePassword String    @map("employee_password")
+  employeePassword String?   @map("employee_password")
   employeeType     String?   @default("employee") @map("employee_type")
   employeePhone    String    @map("employee_phone")
   employeeTeam     String    @map("employee_team")
