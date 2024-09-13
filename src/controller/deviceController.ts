@@ -26,7 +26,15 @@ export const addDevice = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  const {
+    deviceType,
+    deviceName,
+    deviceDescription,
+    deviceAssignmentId,
+    serialNo,
+    assignee,
+    isOutdated,
+  } = req.body;
   try {
     let linkedEmployee;
 
@@ -45,6 +53,9 @@ export const addDevice = async (
         serialNo,
         assignee,
         employeeId: linkedEmployee?.id,
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
     });
 
@@ -65,7 +76,15 @@ export const updateDevice = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  const {
+    deviceType,
+    deviceName,
+    deviceDescription,
+    deviceAssignmentId,
+    serialNo,
+    assignee,
+    isOutdated,
+  } = req.body;
   try {
     let linkedEmployee;
 
@@ -86,6 +105,9 @@ export const updateDevice = async (
         assignee,
         employeeId: linkedEmployee?.id,
         updatedAt: new Date(),
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
       create: {
         deviceType,
@@ -93,6 +115,9 @@ export const updateDevice = async (
         serialNo,
         assignee,
         employeeId: linkedEmployee?.id,
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
     });
     res.json({

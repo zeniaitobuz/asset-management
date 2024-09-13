@@ -3,6 +3,8 @@ import { regex } from "../constants/regEx";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const employeeValidator = z.object({
+  employeeName: z.string({ required_error: "Name is required!" }),
+  employeeTeam: z.string({ required_error: "Team is required!" }),
   employeeEmail: z
     .string({
       required_error: "Email is required!",

@@ -13,14 +13,13 @@ const employeeRoute = express.Router();
 
 employeeRoute.use(tokenVerification);
 employeeRoute.use(verifyAdmin);
-employeeRoute.use(employeeValidation);
 
-employeeRoute.get("/all-employee", getAllUsers);
-employeeRoute.post("/create-employee", addEmployee);
-employeeRoute.put("/update-employee/:id", updateEmployee);
+employeeRoute.get("/all-employee", [employeeValidation], getAllUsers);
+employeeRoute.post("/create-employee", [employeeValidation], addEmployee);
+employeeRoute.put("/update-employee/:id", [employeeValidation], updateEmployee);
 employeeRoute.delete(
   "/delete-employee/:id",
-  [tokenVerification],
+  [employeeValidation],
   deleteEmployee
 );
 
