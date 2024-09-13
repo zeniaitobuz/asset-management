@@ -5,8 +5,8 @@ import {
   updateDevice,
   deleteDevice,
 } from "../controller/deviceController";
-import tokenVerification from "../middlewares/tokenVerification";
-import { verifyAdmin } from "../middlewares/verifyAdmin";
+import tokenVerification from "../middlewares/tokenVerification/tokenVerification";
+import { verifyAdmin } from "../middlewares/adminVerification/verifyAdmin";
 
 const deviceRoutes = express.Router();
 

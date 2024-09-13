@@ -1,0 +1,19 @@
+import { RequestHandler } from "express";
+import { employeeValidator } from "../../validators/employeeValidator";
+import z from "zod";
+import { StatusCodes } from "http-status-codes";
+
+export const employeeValidation: RequestHandler = async (req, res, next) => {
+  try {
+    const { body } = req;
+
+    await employeeValidator.parse(body);
+    next();
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(StatusCodes.NOT_FOUND);
+      next(new Error(error.errors[0].message));
+    }
+    next(error);
+  }
+};

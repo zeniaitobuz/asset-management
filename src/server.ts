@@ -5,7 +5,7 @@ import authRouter from "./routes/authRoutes";
 const app = express();
 
 import cors from "cors";
-import logger from "./middlewares/loggerMiddleware";
+import logger from "./middlewares/logger/loggerMiddleware";
 
 app.use(express.json());
 app.use(cors());
