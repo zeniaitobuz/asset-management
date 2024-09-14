@@ -7,7 +7,7 @@ import {
 } from "../controller/employeeController";
 import tokenVerification from "../middlewares/tokenVerification/tokenVerification";
 import { verifyAdmin } from "../middlewares/adminVerification/verifyAdmin";
-import { employeeValidation } from "../middlewares/validators/employeeValidator";
+import { employeeValidation } from "../middlewares/validators/employeeValidationMiddleware";
 
 const employeeRoute = express.Router();
 

@@ -7,7 +7,7 @@ export const employeeValidation: RequestHandler = async (req, res, next) => {
   try {
     const { body } = req;
 
-    await employeeValidator.parse(body);
+    employeeValidator.parse(body);
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
