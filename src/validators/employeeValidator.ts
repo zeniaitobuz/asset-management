@@ -20,6 +20,9 @@ export const employeeValidator = z.object({
     .refine((value) => regex.emailFormat.test(value), {
       message: "Invalid email format!",
     }),
+  employeeStatus: z.string({
+    invalid_type_error: "Employee Status will be in a string format!",
+  }),
   employeePhone: z
     .string({
       required_error: "Phone is required!",

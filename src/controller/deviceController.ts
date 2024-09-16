@@ -48,6 +48,22 @@ export const addOrUpdateDevice = async (
   try {
     let linkedEmployee;
 
+    if (deviceAssignmentId) {
+      let month = new Date().toLocaleDateString().split("/")[0];
+      Number(month) < 10 ? (month = `0${month}`) : (month = month);
+      const year = new Date().toLocaleDateString().split("/")[2].substring(2);
+      if (
+        deviceAssignmentId.substring(3, 5) !== month &&
+        deviceAssignmentId.substring(4, 6) !== year
+      ) {
+        next(
+          new Error(
+            "The month and year of deviceAssignmentId needs to be the present month and year"
+          )
+        );
+      }
+    }
+
     if (assignee) {
       linkedEmployee = await prisma.employees.findUnique({
         where: {
@@ -96,7 +112,6 @@ export const addOrUpdateDevice = async (
         next(new Error("Serial number will be unique!"));
       }
     } else if (error instanceof Prisma.PrismaClientValidationError) {
-      console.log("---------", error.message, "---------");
       if (
         error.message.includes(
           "Invalid value for argument `deviceType`. Expected Devices."
