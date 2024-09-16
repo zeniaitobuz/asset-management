@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -26,7 +26,15 @@ export const addDevice = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  const {
+    deviceType,
+    deviceName,
+    deviceDescription,
+    deviceAssignmentId,
+    serialNo,
+    assignee,
+    isOutdated,
+  } = req.body;
   try {
     let linkedEmployee;
 
@@ -37,6 +45,9 @@ export const addDevice = async (
         },
       });
     }
+    if (!linkedEmployee) {
+      next(new Error("Assignee does not exist!"));
+    }
 
     const addedDevice = await prisma.devices.create({
       data: {
@@ -45,15 +56,22 @@ export const addDevice = async (
         serialNo,
         assignee,
         employeeId: linkedEmployee?.id,
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
     });
-
     res.json({
       data: addedDevice,
       message: "Device added successfully",
       success: true,
     });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        next(new Error("Serial number will be unique!"));
+      }
+    }
     next(error);
   }
 };
@@ -65,7 +83,15 @@ export const updateDevice = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { deviceType, deviceName, serialNo, assignee } = req.body;
+  const {
+    deviceType,
+    deviceName,
+    deviceDescription,
+    deviceAssignmentId,
+    serialNo,
+    assignee,
+    isOutdated,
+  } = req.body;
   try {
     let linkedEmployee;
 
@@ -86,6 +112,9 @@ export const updateDevice = async (
         assignee,
         employeeId: linkedEmployee?.id,
         updatedAt: new Date(),
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
       create: {
         deviceType,
@@ -93,6 +122,9 @@ export const updateDevice = async (
         serialNo,
         assignee,
         employeeId: linkedEmployee?.id,
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
       },
     });
     res.json({

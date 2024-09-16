@@ -5,7 +5,7 @@ import authRouter from "./routes/authRoutes";
 const app = express();
 
 import cors from "cors";
-import logger from "./middlewares/loggerMiddleware";
+import logger from "./middlewares/logger/loggerMiddleware";
 
 app.use(express.json());
 app.use(cors());
@@ -25,6 +25,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 });
 
-app.listen(4000, () => {
+app.listen(4000, "0.0.0.0", () => {
   console.log("Server is running on http://localhost:4000");
 });

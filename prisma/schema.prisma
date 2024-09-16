@@ -19,10 +19,10 @@ model devices {
   deviceName         String     @map("device_name")
   deviceDescription  String?    @map("device_description")
   serialNo           String     @unique @map("serial_no")
-  deviceAssignmentId String?    @map("device_assignment_id")
+  deviceAssignmentId String?    @unique @map("device_assignment_id")
   assignee           String?
-  isOutdated         Boolean?   @map("is_outdated")
-  createdAt          DateTime?  @default(now()) @map("created_at ")
+  isOutdated         Boolean?   @default(false) @map("is_outdated")
+  createdAt          DateTime?  @default(now()) @map("created_at")
   deletedAt          DateTime?  @map("deleted_at")
   updatedAt          DateTime?  @map("updated_at")
   employee           employees? @relation(fields: [employeeId], references: [id])
