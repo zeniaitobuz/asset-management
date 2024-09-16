@@ -14,7 +14,7 @@ const deviceRoutes = express.Router();
 deviceRoutes.use(tokenVerification);
 deviceRoutes.use(verifyAdmin);
 
-deviceRoutes.get("/all-devices", [deviceValidation], getAllDevices);
+deviceRoutes.get("/all-devices", getAllDevices);
 deviceRoutes.post("/create-device", [deviceValidation], addDevice);
 deviceRoutes.put("/update-device/:id", [deviceValidation], updateDevice);
 deviceRoutes.delete("/delete-device/:id", [deviceValidation], deleteDevice);
