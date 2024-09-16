@@ -13,9 +13,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum EmployeeStatus {
+  Active
+  Inactive
+}
+
+enum Devices {
+  Phone
+  Watch
+  IMac
+  MacMini
+  MacBook
+}
+
 model devices {
   id                 String     @id @default(uuid())
-  deviceType         String     @map("device_type")
+  deviceType         Devices    @map("device_type")
   deviceName         String     @map("device_name")
   deviceDescription  String?    @map("device_description")
   serialNo           String     @unique @map("serial_no")
@@ -31,17 +44,17 @@ model devices {
 }
 
 model employees {
-  id               String    @id @default(uuid())
-  employeeName     String    @map("employee_name")
-  employeeEmail    String    @unique @map("employee_email")
-  employeePassword String?   @map("employee_password")
-  employeeType     String?   @default("employee") @map("employee_type")
-  employeePhone    String    @map("employee_phone")
-  employeeTeam     String    @map("employee_team")
-  employeeStatus   String    @default("active") @map("employee_status")
-  createdAt        DateTime  @default(now()) @map("created_at ")
-  deletedAt        DateTime? @map("deleted_at")
-  updatedAt        DateTime? @map("updated_at")
+  id               String         @id @default(uuid())
+  employeeName     String         @map("employee_name")
+  employeeEmail    String         @unique @map("employee_email")
+  employeePassword String?        @map("employee_password")
+  employeeType     String?        @default("employee") @map("employee_type")
+  employeePhone    String         @map("employee_phone")
+  employeeTeam     String         @map("employee_team")
+  employeeStatus   EmployeeStatus @default(Active) @map("employee_status")
+  createdAt        DateTime       @default(now()) @map("created_at ")
+  deletedAt        DateTime?      @map("deleted_at")
+  updatedAt        DateTime?      @map("updated_at")
   devices          devices[]
   history          history[]
 }

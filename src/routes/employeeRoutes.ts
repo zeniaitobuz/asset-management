@@ -1,9 +1,8 @@
 import express from "express";
 import {
   getAllUsers,
-  addEmployee,
-  updateEmployee,
   deleteEmployee,
+  addOrUpdateEmployee,
 } from "../controller/employeeController";
 import tokenVerification from "../middlewares/tokenVerification/tokenVerification";
 import { verifyAdmin } from "../middlewares/adminVerification/verifyAdmin";
@@ -15,8 +14,16 @@ employeeRoute.use(tokenVerification);
 employeeRoute.use(verifyAdmin);
 
 employeeRoute.get("/all-employee", getAllUsers);
-employeeRoute.post("/create-employee", [employeeValidation], addEmployee);
-employeeRoute.put("/update-employee/:id", [employeeValidation], updateEmployee);
+employeeRoute.post(
+  "/create-employee",
+  [employeeValidation],
+  addOrUpdateEmployee
+);
+employeeRoute.put(
+  "/update-employee/:id",
+  [employeeValidation],
+  addOrUpdateEmployee
+);
 employeeRoute.delete(
   "/delete-employee/:id",
   [employeeValidation],

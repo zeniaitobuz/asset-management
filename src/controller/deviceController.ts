@@ -20,12 +20,21 @@ export const getAllDevices = async (
   }
 };
 
-// Create a new device
-export const addDevice = async (
+// Create or Update a device
+export const addOrUpdateDevice = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  let { id } = req.params;
+
+  let addOrUpdate = "updated";
+
+  if (!id) {
+    id = crypto.randomUUID();
+    addOrUpdate = "added";
+  }
+
   const {
     deviceType,
     deviceName,
@@ -35,6 +44,7 @@ export const addDevice = async (
     assignee,
     isOutdated,
   } = req.body;
+
   try {
     let linkedEmployee;
 
@@ -45,62 +55,9 @@ export const addDevice = async (
         },
       });
     }
+
     if (!linkedEmployee) {
       next(new Error("Assignee does not exist!"));
-    }
-
-    const addedDevice = await prisma.devices.create({
-      data: {
-        deviceType,
-        deviceName,
-        serialNo,
-        assignee,
-        employeeId: linkedEmployee?.id,
-        deviceDescription,
-        deviceAssignmentId,
-        isOutdated,
-      },
-    });
-    res.json({
-      data: addedDevice,
-      message: "Device added successfully",
-      success: true,
-    });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        next(new Error("Serial number will be unique!"));
-      }
-    }
-    next(error);
-  }
-};
-
-// Update a device
-export const updateDevice = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { id } = req.params;
-  const {
-    deviceType,
-    deviceName,
-    deviceDescription,
-    deviceAssignmentId,
-    serialNo,
-    assignee,
-    isOutdated,
-  } = req.body;
-  try {
-    let linkedEmployee;
-
-    if (assignee) {
-      linkedEmployee = await prisma.employees.findUnique({
-        where: {
-          employeeEmail: assignee,
-        },
-      });
     }
 
     const updatedDevice = await prisma.devices.upsert({
@@ -117,6 +74,7 @@ export const updateDevice = async (
         isOutdated,
       },
       create: {
+        id,
         deviceType,
         deviceName,
         serialNo,
@@ -129,10 +87,27 @@ export const updateDevice = async (
     });
     res.json({
       data: updatedDevice,
-      message: "Device updated successfully",
+      message: `Device ${addOrUpdate} successfully`,
       success: true,
     });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        next(new Error("Serial number will be unique!"));
+      }
+    } else if (error instanceof Prisma.PrismaClientValidationError) {
+      console.log("---------", error.message, "---------");
+      if (
+        error.message.includes(
+          "Invalid value for argument `deviceType`. Expected Devices."
+        )
+      )
+        next(
+          new Error(
+            "Device Type will have only 'Phone' 'Watch' 'IMac' 'MacMini' 'MacBook' keywords as values!"
+          )
+        );
+    }
     next(error);
   }
 };
