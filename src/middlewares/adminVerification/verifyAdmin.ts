@@ -6,7 +6,7 @@ export const verifyAdmin: RequestHandler = (req, res, next) => {
   try {
     const { user } = req.body as { user: employees };
 
-    if (user.employeeType !== "admin") {
+    if (user.employeeType !== "Admin") {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Unauthorized");
     }

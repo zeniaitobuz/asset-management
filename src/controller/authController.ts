@@ -40,7 +40,7 @@ export const signIn = async (
       throw new Error("Invalid Credentials!");
     }
 
-    if (employeeDetails.employeeType !== "admin") {
+    if (employeeDetails.employeeType !== "Admin") {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Invalid Action!");
     }

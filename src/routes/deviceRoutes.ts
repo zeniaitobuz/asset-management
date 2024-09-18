@@ -1,8 +1,7 @@
 import express from "express";
 import {
   getAllDevices,
-  addDevice,
-  updateDevice,
+  addOrUpdateDevice,
   deleteDevice,
 } from "../controller/deviceController";
 import tokenVerification from "../middlewares/tokenVerification/tokenVerification";
@@ -15,8 +14,8 @@ deviceRoutes.use(tokenVerification);
 deviceRoutes.use(verifyAdmin);
 
 deviceRoutes.get("/all-devices", getAllDevices);
-deviceRoutes.post("/create-device", [deviceValidation], addDevice);
-deviceRoutes.put("/update-device/:id", [deviceValidation], updateDevice);
-deviceRoutes.delete("/delete-device/:id", [deviceValidation], deleteDevice);
+deviceRoutes.post("/create-device", [deviceValidation], addOrUpdateDevice);
+deviceRoutes.put("/update-device/:id", [deviceValidation], addOrUpdateDevice);
+deviceRoutes.delete("/delete-device/:id", deleteDevice);
 
 export default deviceRoutes;
