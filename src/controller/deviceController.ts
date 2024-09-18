@@ -108,7 +108,17 @@ export const addOrUpdateDevice = async (
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
+      if (
+        error.message.includes(
+          "Unique constraint failed on the fields: (`device_assignment_id`)"
+        )
+      ) {
+        next(new Error("device_assignment_id will be unique!"));
+      } else if (
+        error.message.includes(
+          "Unique constraint failed on the fields: (`serial_no`)"
+        )
+      ) {
         next(new Error("Serial number will be unique!"));
       }
     } else if (error instanceof Prisma.PrismaClientValidationError) {

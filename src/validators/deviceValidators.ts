@@ -6,9 +6,11 @@ export const deviceValidator = z.object({
     required_error: "Device type is required!",
     invalid_type_error: "Device Type will be in a string format!",
   }),
-  deviceDescription: z.string({
-    invalid_type_error: "device description will be in a string format!",
-  }),
+  deviceDescription: z
+    .string({
+      invalid_type_error: "device description will be in a string format!",
+    })
+    .optional(),
   deviceName: z.string({
     required_error: "Device name is required!",
     invalid_type_error: "Device Name will be in a string format!",
@@ -28,10 +30,13 @@ export const deviceValidator = z.object({
       {
         message: "Invalid format for deviceAssignmentId!",
       }
-    ),
-  isOutdated: z.boolean({
-    invalid_type_error: "isOutdated will be in boolean format!",
-  }),
+    )
+    .optional(),
+  isOutdated: z
+    .boolean({
+      invalid_type_error: "isOutdated will be in boolean format!",
+    })
+    .optional(),
   assignee: z
     .string({
       invalid_type_error: "Assignee will be in a string format!",
@@ -39,5 +44,6 @@ export const deviceValidator = z.object({
     .email()
     .refine((value) => regex.emailFormat.test(value), {
       message: "Invalid email format!",
-    }),
+    })
+    .optional(),
 });
