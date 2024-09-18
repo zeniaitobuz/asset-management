@@ -26,6 +26,11 @@ enum Devices {
   MacBook
 }
 
+enum EmployeeType {
+  Admin
+  Employee
+}
+
 model devices {
   id                 String     @id @default(uuid())
   deviceType         Devices    @map("device_type")
@@ -48,7 +53,7 @@ model employees {
   employeeName     String         @map("employee_name")
   employeeEmail    String         @unique @map("employee_email")
   employeePassword String?        @map("employee_password")
-  employeeType     String?        @default("employee") @map("employee_type")
+  employeeType     EmployeeType?  @default(Employee) @map("employee_type")
   employeePhone    String         @map("employee_phone")
   employeeTeam     String         @map("employee_team")
   employeeStatus   EmployeeStatus @default(Active) @map("employee_status")

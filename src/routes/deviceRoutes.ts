@@ -16,6 +16,6 @@ deviceRoutes.use(verifyAdmin);
 deviceRoutes.get("/all-devices", getAllDevices);
 deviceRoutes.post("/create-device", [deviceValidation], addOrUpdateDevice);
 deviceRoutes.put("/update-device/:id", [deviceValidation], addOrUpdateDevice);
-deviceRoutes.delete("/delete-device/:id", [deviceValidation], deleteDevice);
+deviceRoutes.delete("/delete-device/:id", deleteDevice);
 
 export default deviceRoutes;

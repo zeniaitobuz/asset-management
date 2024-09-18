@@ -76,12 +76,13 @@ export const addOrUpdateEmployee = async (
         error.message.includes(
           "Invalid value for argument `employeeStatus`. Expected EmployeeStatus."
         )
-      )
+      ) {
         next(
           new Error(
             "Employee Status will have only 'Active' and 'Inactive' keywords as values!"
           )
         );
+      }
     }
     next(error);
   }
@@ -95,8 +96,11 @@ export const deleteEmployee = async (
 ) => {
   const { id } = req.params;
   try {
-    const deletedEmployee: employees = await prisma.employees.delete({
+    const deletedEmployee: employees = await prisma.employees.update({
       where: { id: id },
+      data: {
+        deletedAt: new Date(),
+      },
     });
     res.json({
       data: deletedEmployee,

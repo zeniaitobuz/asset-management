@@ -145,8 +145,11 @@ export const deleteDevice = async (
 ) => {
   const { id } = req.params;
   try {
-    const deletedDevice = await prisma.devices.delete({
+    const deletedDevice = await prisma.devices.update({
       where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
     });
     res.json({
       data: deletedDevice,

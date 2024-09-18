@@ -24,10 +24,6 @@ employeeRoute.put(
   [employeeValidation],
   addOrUpdateEmployee
 );
-employeeRoute.delete(
-  "/delete-employee/:id",
-  [employeeValidation],
-  deleteEmployee
-);
+employeeRoute.delete("/delete-employee/:id", deleteEmployee);
 
 export default employeeRoute;
