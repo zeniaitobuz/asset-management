@@ -9,7 +9,45 @@ export const getAllDevices = async (
   next: NextFunction
 ) => {
   try {
-    const allDevices = await prisma.devices.findMany();
+    const { deviceType, deviceName, serialNo, deviceAssignmentId, assignee } =
+      req.query;
+
+    const searchFilters: any = {};
+
+    if (deviceType) {
+      searchFilters.deviceType = {
+        contains: deviceType as string,
+        mode: "insensitive",
+      };
+    }
+    if (deviceName) {
+      searchFilters.deviceName = {
+        contains: deviceName as string,
+        mode: "insensitive",
+      };
+    }
+    if (serialNo) {
+      searchFilters.serialNo = {
+        contains: serialNo as string,
+        mode: "insensitive",
+      };
+    }
+    if (deviceAssignmentId) {
+      searchFilters.deviceAssignmentId = {
+        contains: deviceAssignmentId as string,
+        mode: "insensitive",
+      };
+    }
+    if (assignee) {
+      searchFilters.assignee = {
+        contains: assignee as string,
+        mode: "insensitive",
+      };
+    }
+
+    const allDevices = await prisma.devices.findMany({
+      where: searchFilters,
+    });
     res.json({
       data: allDevices,
       success: true,
@@ -190,6 +228,7 @@ export const deleteDevice = async (
       where: { id },
       data: {
         deletedAt: new Date(),
+        isDeleted: true,
       },
     });
     res.json({

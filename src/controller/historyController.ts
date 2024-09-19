@@ -32,6 +32,7 @@ export const deleteHistory = async (
       where: { id },
       data: {
         deletedAt: new Date(),
+        isDeleted: true,
       },
     });
     res.json({
