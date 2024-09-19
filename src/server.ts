@@ -2,10 +2,11 @@ import express, { Request, Response, NextFunction } from "express";
 import employeeRoute from "./routes/employeeRoutes";
 import deviceRoutes from "./routes/deviceRoutes";
 import authRouter from "./routes/authRoutes";
-const app = express();
-
 import cors from "cors";
 import logger from "./middlewares/logger/loggerMiddleware";
+import historyRoutes from "./routes/historyRoutes";
+
+const app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(logger);
 app.use(authRouter);
 app.use(employeeRoute);
 app.use(deviceRoutes);
+app.use(historyRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running!");

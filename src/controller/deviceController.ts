@@ -53,8 +53,8 @@ export const addOrUpdateDevice = async (
       Number(month) < 10 ? (month = `0${month}`) : (month = month);
       const year = new Date().toLocaleDateString().split("/")[2].substring(2);
       if (
-        deviceAssignmentId.substring(3, 5) !== month &&
-        deviceAssignmentId.substring(4, 6) !== year
+        deviceAssignmentId.substring(3, 5) !== month ||
+        deviceAssignmentId.substring(5, 7) !== year
       ) {
         next(
           new Error(
@@ -64,12 +64,27 @@ export const addOrUpdateDevice = async (
       }
     }
 
+    let historyId;
+    let historyDetails;
+
     if (assignee) {
       linkedEmployee = await prisma.employees.findUnique({
         where: {
           employeeEmail: assignee,
         },
       });
+
+      historyDetails = await prisma.history.findUnique({
+        where: {
+          deviceId: id,
+        },
+      });
+
+      if (!historyDetails) {
+        historyId = crypto.randomUUID();
+      } else {
+        historyId = historyDetails.id;
+      }
     }
 
     if (!linkedEmployee) {
@@ -78,17 +93,6 @@ export const addOrUpdateDevice = async (
 
     const updatedDevice = await prisma.devices.upsert({
       where: { id },
-      update: {
-        deviceType,
-        deviceName,
-        serialNo,
-        assignee,
-        employeeId: linkedEmployee?.id,
-        updatedAt: new Date(),
-        deviceDescription,
-        deviceAssignmentId,
-        isOutdated,
-      },
       create: {
         id,
         deviceType,
@@ -100,7 +104,44 @@ export const addOrUpdateDevice = async (
         deviceAssignmentId,
         isOutdated,
       },
+      update: {
+        deviceType,
+        deviceName,
+        serialNo,
+        assignee,
+        employeeId: linkedEmployee?.id,
+        updatedAt: new Date(),
+        deviceDescription,
+        deviceAssignmentId,
+        isOutdated,
+      },
     });
+
+    if (linkedEmployee) {
+      await prisma.history.upsert({
+        where: {
+          id: historyId,
+        },
+        create: {
+          id: historyId,
+          deviceId: id,
+          currentUser: linkedEmployee?.id,
+          previousUsers: [],
+        },
+        update: {
+          deviceId: id,
+          currentUser: linkedEmployee?.id,
+          previousUsers: {
+            set: [
+              ...(historyDetails?.previousUsers ?? []),
+              historyDetails?.currentUser ?? "",
+            ],
+          },
+          updatedAt: new Date(),
+        },
+      });
+    }
+
     res.json({
       data: updatedDevice,
       message: `Device ${addOrUpdate} successfully`,
