@@ -16,9 +16,13 @@ export const getAllUsers = async (
       employeeTeam,
       employeeStatus,
       isDeleted,
+      page = "1",
+      limit = "10",
     } = req.query;
 
     const searchFilters: any = {};
+
+    const skip = (Number(page) - 1) * Number(limit);
 
     if (employeeName) {
       searchFilters.employeeName = {
@@ -59,12 +63,26 @@ export const getAllUsers = async (
 
     const allEmployees = await prisma.employees.findMany({
       where: searchFilters,
+      skip,
+      take: Number(limit),
     });
+
+    const totalEmployees = await prisma.employees.count({
+      where: searchFilters,
+    });
+
+    const totalPages = Math.ceil(totalEmployees / Number(limit));
 
     res.json({
       data: allEmployees,
       success: true,
       message: "Employees fetched successfully",
+      pagination: {
+        totalEmployees,
+        totalPages,
+        currentPage: Number(page),
+        limit,
+      },
     });
   } catch (error) {
     next(error);

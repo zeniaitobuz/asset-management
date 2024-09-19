@@ -9,10 +9,19 @@ export const getAllDevices = async (
   next: NextFunction
 ) => {
   try {
-    const { deviceType, deviceName, serialNo, deviceAssignmentId, assignee } =
-      req.query;
+    const {
+      deviceType,
+      deviceName,
+      serialNo,
+      deviceAssignmentId,
+      assignee,
+      page = "1",
+      limit = "10",
+    } = req.query;
 
     const searchFilters: any = {};
+
+    const skip = (Number(page) - 1) * Number(limit);
 
     if (deviceType) {
       searchFilters.deviceType = {
@@ -47,11 +56,26 @@ export const getAllDevices = async (
 
     const allDevices = await prisma.devices.findMany({
       where: searchFilters,
+      skip,
+      take: Number(limit),
     });
+
+    const totalDevices = await prisma.employees.count({
+      where: searchFilters,
+    });
+
+    const totalPages = Math.ceil(totalDevices / Number(limit));
+
     res.json({
       data: allDevices,
       success: true,
       message: "Devices fetched successfully",
+      pagination: {
+        totalDevices,
+        totalPages,
+        currentPage: Number(page),
+        limit,
+      },
     });
   } catch (error) {
     next(error);
