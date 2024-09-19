@@ -9,7 +9,33 @@ export const getAllUsers = async (
   next: NextFunction
 ) => {
   try {
-    const allEmployees = await prisma.employees.findMany();
+    const { employeeName, employeeEmail, employeePhone } = req.query;
+
+    const searchFilters: any = {};
+
+    if (employeeName) {
+      searchFilters.employeeName = {
+        contains: employeeName as string,
+        mode: "insensitive",
+      };
+    }
+    if (employeeEmail) {
+      searchFilters.employeeEmail = {
+        contains: employeeEmail as string,
+        mode: "insensitive",
+      };
+    }
+    if (employeePhone) {
+      searchFilters.employeePhone = {
+        contains: employeePhone as string,
+        mode: "insensitive",
+      };
+    }
+
+    const allEmployees = await prisma.employees.findMany({
+      where: searchFilters,
+    });
+
     res.json({
       data: allEmployees,
       success: true,
@@ -41,6 +67,7 @@ export const addOrUpdateEmployee = async (
     employeeTeam,
     employeeStatus,
   } = req.body;
+
   try {
     const updatedEmployee: employees = await prisma.employees.upsert({
       where: { id: id },
