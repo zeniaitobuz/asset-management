@@ -228,6 +228,7 @@ export const deleteDevice = async (
       where: { id },
       data: {
         deletedAt: new Date(),
+        isDeleted: true,
       },
     });
     res.json({

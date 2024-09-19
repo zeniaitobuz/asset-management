@@ -9,7 +9,14 @@ export const getAllUsers = async (
   next: NextFunction
 ) => {
   try {
-    const { employeeName, employeeEmail, employeePhone } = req.query;
+    const {
+      employeeName,
+      employeeEmail,
+      employeePhone,
+      employeeTeam,
+      employeeStatus,
+      isDeleted,
+    } = req.query;
 
     const searchFilters: any = {};
 
@@ -28,6 +35,24 @@ export const getAllUsers = async (
     if (employeePhone) {
       searchFilters.employeePhone = {
         contains: employeePhone as string,
+        mode: "insensitive",
+      };
+    }
+    if (employeeTeam) {
+      searchFilters.employeeTeam = {
+        contains: employeeTeam as string,
+        mode: "insensitive",
+      };
+    }
+    if (employeeStatus) {
+      searchFilters.employeeStatus = {
+        contains: employeeStatus as string,
+        mode: "insensitive",
+      };
+    }
+    if (isDeleted) {
+      searchFilters.isDeleted = {
+        contains: isDeleted as string,
         mode: "insensitive",
       };
     }
@@ -127,6 +152,7 @@ export const deleteEmployee = async (
       where: { id: id },
       data: {
         deletedAt: new Date(),
+        isDeleted: true,
       },
     });
     res.json({
